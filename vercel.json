@@ -1,11 +1,32 @@
 {
   "version": 2,
   "builds": [
-    { "src": "backend/src/main.py", "use": "@vercel/python" },
-    { "src": "frontend/package.json", "use": "@vercel/static-build" }
+    {
+      "src": "backend/src/main.py",
+      "use": "@vercel/python",
+      "config": { 
+        "maxLambdaSize": "15mb", 
+        "runtime": "python3.10" 
+      }
+    },
+    {
+      "src": "frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": { 
+        "outputDirectory": "build" 
+      }
+    }
   ],
   "routes": [
-    { "src": "/api/(.*)", "dest": "backend/src/main.py" },
-    { "src": "/(.*)", "dest": "frontend/public/index.html" }
-  ]
+    {
+      "src": "/api/(.*)",
+      "dest": "backend/src/main.py"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "frontend/$1"
+    }
+  ],
+  "installCommand": "npm install --prefix frontend && pip install -r backend/requirements.txt",
+  "buildCommand": "npm run build --prefix frontend"
 }
