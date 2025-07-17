@@ -77,18 +77,6 @@ This ensures **fast**, **flexible**, and **contextually rich** results.
 - uuid
 
 ---
-## 📐 Architecture – Scale Considerations
-
-| Area                       | Challenge                                | Suggested Solution                                                       |
-|----------------------------|------------------------------------------|---------------------------------------------------------------------------|
-| Heavy image processing     | Risk of timeouts, backend overload       | Asynchronous queues (Celery, Kafka, AWS SQS)                             |
-| Model resource usage       | High memory / GPU demand                 | Dedicated model serving (TorchServe, Triton)                             |
-| Consistent deployments     | Dev/prod inconsistencies                 | Docker + Kubernetes orchestration                                        |
-| Persistent storage         | Ephemeral results                        | Database (PostgreSQL, MongoDB) + object storage (S3)                     |
-| User access control        | No authentication                        | OAuth2 / JWT with roles                                                  |
-| Monitoring & logging       | No centralized monitoring                | Prometheus, Grafana, ELK Stack or Datadog                                |
-
----
 
 ## 📄 License
 
