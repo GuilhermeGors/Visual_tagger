@@ -1,38 +1,25 @@
 from functools import lru_cache
 import logging
-from transformers import AutoModelForImageClassification, AutoImageProcessor, AutoProcessor, CLIPModel 
+from transformers import AutoProcessor, CLIPModel 
 import torch
 
 logger = logging.getLogger(__name__)
 
-GENERAL_CLASSIFIER_MODEL_NAME = "google/vit-base-patch16-224"
-CLIP_MODEL_NAME = "openai/clip-vit-base-patch32"
+# CLIP model name for zero-shot classification
+CLIP_MODEL_NAME = "openai/clip-vit-base-patch32"             
 
 @lru_cache()
-def get_all_image_models_and_processors():
+def get_all_image_models_and_processors(): # Function name kept for compatibility
     """
-    Loads the general classification model and its processor,
-    and the CLIP model and its processor.
-    All are loaded only once due to lru_cache.
+    Loads the CLIP model and its processor.
+    Loaded only once due to lru_cache.
     """
-    logger.info("Starting to load all AI models...")
+    logger.info("Starting to load CLIP AI model...") 
     
-    general_model = None
-    general_processor = None
     clip_model = None
     clip_processor = None
 
     try:
-        # --- General Classifier (ViT) Loading ---
-        logger.info(f"Loading general classifier: {GENERAL_CLASSIFIER_MODEL_NAME}...")
-        general_processor = AutoImageProcessor.from_pretrained(GENERAL_CLASSIFIER_MODEL_NAME)
-        # Load with torch.float16 (quantization)
-        general_model = AutoModelForImageClassification.from_pretrained(GENERAL_CLASSIFIER_MODEL_NAME, torch_dtype=torch.float16)
-        general_model.to('cpu')
-        general_model.eval()
-        logger.info("General classifier and processor loaded successfully and quantized to float16.")
-
-        # --- CLIP Model Loading ---
         logger.info(f"Loading CLIP model: {CLIP_MODEL_NAME}...")
         clip_processor = AutoProcessor.from_pretrained(CLIP_MODEL_NAME)
         # Load with torch.float16 (quantization)
@@ -41,8 +28,9 @@ def get_all_image_models_and_processors():
         clip_model.eval()
         logger.info("CLIP model and processor loaded successfully and quantized to float16.")
         
-        logger.info("All AI models and processors loaded and ready for use.")
-        return general_model, general_processor, clip_model, clip_processor
+        logger.info("CLIP AI model and processor loaded and ready for use.") 
+        # Returns only the CLIP model and processor
+        return clip_model, clip_processor
     except Exception as e:
-        logger.error(f"Error loading one or more AI models or processors: {e}", exc_info=True)
-        raise RuntimeError(f"Failed to load AI models: {e}")
+        logger.error(f"Error loading CLIP AI model or processor: {e}", exc_info=True) 
+        raise RuntimeError(f"Failed to load CLIP AI model: {e}")
