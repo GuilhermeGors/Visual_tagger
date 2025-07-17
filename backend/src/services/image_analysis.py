@@ -1,18 +1,16 @@
 from typing import List, Dict, Any, Tuple
 import io
 from PIL import Image
-import random # For mock data
+import random 
 import uuid
 
 from backend.src.models.image import Tag, ImageAnalysisResponse
 from backend.src.core.config import get_settings
-# REMOVIDO: from backend.src.core.dependencies import get_all_image_models_and_processors 
 
 import logging
 
 logger = logging.getLogger(__name__)
 
-# Constants for configuration (still useful for mock logic)
 MIN_OVERALL_CONFIDENCE_FOR_TAG = 0.001 
 
 class ImageAnalysisService:
@@ -21,9 +19,6 @@ class ImageAnalysisService:
     For Vercel Free Tier deployment, actual AI inference is mocked due to size limits.
     """
     def __init__(self):
-        # Models are not loaded here for Vercel Free Tier deployment
-        # self.clip_model, self.clip_processor = get_all_image_models_and_processors() # REMOVIDO
-        
         self.settings = get_settings() 
 
         logger.info("ImageAnalysisService initialized. Using mock AI inference for Vercel Free Tier.") 
@@ -42,27 +37,26 @@ class ImageAnalysisService:
         """
         logger.info(f"Starting mock analysis for image: '{filename}'") 
         try:
-            # Basic image validation (still useful)
             Image.open(io.BytesIO(image_data))
             
-            # --- MOCK INFERENCE LOGIC ---
             mock_tags_pool = [
                 "person", "dog", "cat", "building", "food", "car", "nature", 
                 "Michael Jackson", "concert", "city", "street", "tree", "flower",
-                "laptop", "smartphone", "beach", "mountain", "forest", "sky", "water"
+                "laptop", "smartphone", "beach", "mountain", "forest", "sky", "water",
+                # Adicione mais algumas tags para garantir que o pool seja grande o suficiente para 5 tags únicas
+                "ocean", "park", "vehicle", "animal", "plant", "bridge", "road", "audience"
             ]
-
-            num_tags = random.randint(3, 5) # Generate 3 to 5 tags
-            selected_mock_tags = random.sample(mock_tags_pool, num_tags)
+            num_tags_to_select = 5 
+            selected_mock_tags = random.sample(mock_tags_pool, num_tags_to_select)
 
             all_tags: List[Tag] = []
             for tag_name in selected_mock_tags:
-                confidence = round(random.uniform(0.1, 0.99), 2) # Random confidence
+                confidence = round(random.uniform(0.1, 0.99), 2) 
                 all_tags.append(Tag(name=tag_name, confidence=confidence, source_model="Mock AI"))
             
             all_tags.sort(key=lambda t: t.confidence, reverse=True)
 
-            # Ensure we return top 5, even if mock generates less
+            # This will now consistently return 5 tags if `all_tags` has 5 or more
             final_tags = self._select_top_n_tags(all_tags, 5)
 
             if not final_tags:
@@ -72,7 +66,6 @@ class ImageAnalysisService:
 
             cleaned_tags: List[Tag] = []
             for tag in final_tags:
-                # No "a photo of a" prefix to remove from mock tags
                 cleaned_tags.append(Tag(name=tag.name, confidence=tag.confidence, source_model=tag.source_model))
 
 
