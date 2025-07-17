@@ -27,6 +27,6 @@
       "dest": "frontend/$1"
     }
   ],
-  "installCommand": "npm install --prefix frontend && cd backend && pip install -r requirements.txt",
+  "installCommand": "npm install --prefix frontend && pip install -r backend/requirements.txt --target=backend",
   "buildCommand": "npm run build --prefix frontend"
 }
