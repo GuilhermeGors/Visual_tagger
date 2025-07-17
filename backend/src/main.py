@@ -1,12 +1,11 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI # Removed Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 from backend.src.core.config import get_settings
 from backend.src.api import api_router
 import logging
 
-# Logging configuration. Ensures logs are displayed.
-# INFO level is good for development.
+# Basic logging configuration for console output
 logging.basicConfig(level=logging.INFO, format='%(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
@@ -19,7 +18,6 @@ app = FastAPI(
     title=settings.APP_NAME,
     version=settings.APP_VERSION,
     debug=settings.DEBUG,
-    # === REVERT AND EXPLICITLY SET DOCS PATHS HERE ===
     docs_url="/api/docs" if settings.DEBUG else None,
     redoc_url="/api/redoc" if settings.DEBUG else None,
     openapi_url="/api/openapi.json" if settings.DEBUG else None
@@ -41,9 +39,20 @@ async def read_root():
     Test endpoint to check if the API is working.
     """
     logger.info("GET / request received at root route.")
-    return {"message": "Welcome to the VisualTagger API!"}
+    return {"message": "Welcome to VisualTagger API!"}
+
+if settings.DEBUG:
+    @app.get("/docs", include_in_schema=False)
+    async def get_main_docs():
+        logger.info("GET /docs request received. Redirecting to /api/docs.")
+        return RedirectResponse(url="/api/docs")
+
+    @app.get("/redoc", include_in_schema=False)
+    async def get_main_redoc():
+        logger.info("GET /redoc request received. Redirecting to /api/redoc.")
+        return RedirectResponse(url="/api/redoc")
 
 logger.info("Including main API router...")
 app.include_router(api_router)
 logger.info("Main API router included successfully.")
-logger.info("FastAPI application configuration completed.")
+logger.info("FastAPI application configuration complete.")
