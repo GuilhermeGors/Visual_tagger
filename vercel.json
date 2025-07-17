@@ -7,7 +7,8 @@
       "config": { 
         "maxLambdaSize": "50mb", 
         "runtime": "python3.10" 
-      }
+      },
+      "root": "backend"
     },
     {
       "src": "frontend/package.json",
@@ -27,6 +28,6 @@
       "dest": "frontend/$1"
     }
   ],
-  "installCommand": "npm install --prefix frontend && pip install -r backend/requirements.txt --target=backend",
+  "installCommand": "npm install --prefix frontend && pip install -r backend/requirements.txt",
   "buildCommand": "npm run build --prefix frontend"
 }
