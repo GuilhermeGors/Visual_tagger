@@ -1,64 +1,64 @@
 # ⚙️ Backend Mock Mode for Vercel Deployment
 
-Este documento descreve as alterações realizadas no backend do projeto para permitir sua implantação gratuita na plataforma **Vercel**, utilizando um modo de inferência **mockado** (simulado) de IA.
+This document outlines the modifications made to the project’s backend to enable free deployment on **Vercel**, using a **mocked AI inference** mode.
 
 ---
 
-## 🚀 Visão Geral
+## 🚀 Overview
 
-Para contornar a limitação de **50MB para funções serverless** no plano gratuito da Vercel, foram implementadas adaptações que simulam a inferência de modelos de Machine Learning (como CLIP e ViT). Essas mudanças permitem a execução da aplicação no ambiente da Vercel sem comprometer a estrutura original do backend para ambientes com mais recursos.
+To overcome the **50MB serverless function limit** imposed by Vercel's free tier, the backend was adapted to simulate Machine Learning inference (e.g., CLIP and ViT). These changes allow the application to run successfully on Vercel while preserving the original backend architecture for use in more capable environments.
 
 ---
 
-## 🔧 Alterações Realizadas
+## 🔧 Changes Made
 
 ### 📁 `backend/requirements.txt`
-- ❌ Remoção de bibliotecas pesadas: `transformers`, `torch`.
-- ✅ Mantidas apenas as dependências essenciais para o funcionamento da API em modo simulado.
+- ❌ Removed heavy libraries: `transformers`, `torch`.
+- ✅ Retained only lightweight dependencies required to run the API in mock mode.
 
 ---
 
 ### 📁 `backend/src/core/dependencies.py`
-- 🧠 Lógica de carregamento dos modelos reais foi **removida**.
-- 🛠️ A função `get_all_image_models_and_processors()` agora retorna objetos simulados (`None`) e exibe um **log informativo** indicando a ausência do modelo real.
+- 🧠 Removed logic responsible for loading real AI models.
+- 🛠️ The `get_all_image_models_and_processors()` function now returns simulated (`None`) objects and logs a message indicating model loading was skipped.
 
 ---
 
 ### 📁 `backend/src/services/image_analysis.py`
-- 🧪 Toda a inferência baseada em IA foi substituída por um sistema de **tags mockadas**:
-  - Seleção aleatória de tags a partir de um `mock_tags_pool`.
-  - Geração de confiabilidade aleatória para cada tag.
-  - Origem definida como `"Mock AI"`.
-- ✅ Mensagem de resposta ajustada:  
+- 🧪 Entire AI-based inference logic replaced with a **mock tag generation** system:
+  - Random tag selection from a predefined `mock_tags_pool`.
+  - Random confidence values assigned to each tag.
+  - Tag source set to `"Mock AI"`.
+- ✅ Updated API success message:  
   `"Image analysis completed (Mock AI for Vercel Free Tier)"`
-- 📌 Garantia de retorno consistente: sempre 5 tags por imagem, mesmo em modo mock.
+- 📌 Always returns exactly 5 tags per image, even in mock mode.
 
 ---
 
 ### ⚙️ `vercel.json`
-- 📦 `installCommand`: modificado para instalar apenas as dependências leves necessárias.
-- 🚫 `maxLambdaSize`: mantido em `50mb`, limite máximo da Vercel Free Tier.
+- 📦 `installCommand`: updated to install only remaining lightweight dependencies.
+- 🚫 `maxLambdaSize`: set to `50mb`, the maximum allowed by Vercel’s free tier.
 
 ---
 
-## ⚠️ Implicações Importantes
+## ⚠️ Key Implications
 
-| Contexto | Comportamento |
-|----------|----------------|
-| **Vercel (Free Tier)** | Executa com IA **simulada**, sem relevância contextual real nas tags retornadas. |
-| **Localmente (com dependências reais)** | Executa com os modelos de IA reais, oferecendo análise de imagem precisa e baseada em Machine Learning. |
-
----
-
-## 💡 Conclusão
-
-Essa abordagem garante:
-- ✅ Compatibilidade com **ambientes gratuitos** (como a Vercel Free Tier).
-- 🧱 Estrutura pronta para **migração futura** para ambientes com maior capacidade.
-- 🔁 Flexibilidade para desenvolver e testar com IA real localmente, sem mudanças estruturais no código.
+| Environment | Behavior |
+|-------------|----------|
+| **Vercel (Free Tier)** | Runs with **mocked AI**, tags are not contextually accurate. |
+| **Locally (with real dependencies)** | Runs with real AI models, providing accurate image analysis based on Machine Learning. |
 
 ---
 
-Caso deseje reverter para o modo real de inferência, basta restaurar:
-- As dependências completas no `requirements.txt`;
-- A lógica original de `dependencies.py` e `image_analysis.py`.
+## 💡 Conclusion
+
+This approach ensures:
+- ✅ Compatibility with **free-tier environments** (like Vercel).
+- 🧱 Architecture ready for **future upgrades** to production-grade environments.
+- 🔁 Flexibility to develop and test with real AI models locally without changing the core codebase.
+
+---
+
+To revert to real inference mode, simply restore:
+- The full dependencies in `requirements.txt`.
+- The original logic in `dependencies.py` and `image_analysis.py`.
