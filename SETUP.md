@@ -34,7 +34,7 @@ pip install -r requirements.txt
 ````
 
 ## 2.4 Configure Environment Variables
-.env example:
+backend/.env example:
 ```bash
 APP_NAME="VisualTagger Backend"
 APP_VERSION="1.0.0"
