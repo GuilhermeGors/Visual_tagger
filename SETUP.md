@@ -17,12 +17,12 @@ cd visual_tagger
 
 ## 2. Backend Setup
 
-# Windows
+ Windows
 ````bash
 python -m venv venv
 .\venv\Scripts\activate
 ````
-# macOS/Linux
+ macOS/Linux
 ````bash
 python3 -m venv venv
 source venv/bin/activate
@@ -34,7 +34,7 @@ pip install -r requirements.txt
 ````
 
 ##2.4 Configure Environment Variables
-#(.env example)
+.env example:
 ```bash
 APP_NAME="VisualTagger Backend"
 APP_VERSION="1.0.0"
