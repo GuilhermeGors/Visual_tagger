@@ -33,7 +33,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 ````
 
-##2.4 Configure Environment Variables
+# 2.4 Configure Environment Variables
 .env example:
 ```bash
 APP_NAME="VisualTagger Backend"
@@ -45,23 +45,27 @@ HIGH_CONFIDENCE_THRESHOLD_GENERAL=0.6
 MIN_CONFIDENT_TAGS_GENERAL=2
 ```
 
-##2.5 Start the FastAPI Server
+# 2.5 Start the FastAPI Server
 
 ```bash
 uvicorn backend.src.main:app --reload
 ```
 
 ## Frontend Setup
-#3.1 Open frontend folder
+# 3 Open frontend folder
 ```bash
 cd ../frontend
 ```
-3.2 Install Dependencies
+# 3.1 Install Dependencies
 ```bash
 npm install
 ```
 
-3.3 Start Development Server
+# 3.2 Start Development Server
 ```bash
 npm start
 ```
+
+Acess http://localhost:3000
+
+
