@@ -1,83 +1,96 @@
-# 🧠 Visual Tagger – AI-Powered Image Analysis Tool
+# 🧠 Visual Tagger
 
-**Visual Tagger** is a full-stack prototype that extracts structured insights from images using advanced AI models. Ideal for use cases like product labeling and security footage analysis, the system focuses on accuracy, performance, and an intuitive user experience.
+![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue?style=flat-square&logo=python) ![React 18](https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react) ![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=flat-square&logo=fastapi) ![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=flat-square&logo=pytorch) ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)
 
----
+## 🚀 Overview
+**Visual Tagger** is a high-performance, full-stack AI application designed to extract structured, actionable insights from images. It bridges the gap between raw visual data and structured tagging, solving the problem of manual image classification for use cases like e-commerce product labeling and security footage analysis. By leveraging a hybrid AI architecture, it provides fast, context-aware, and highly accurate image tagging, delivering immediate business value through automated visual intelligence.
 
-## 🚀 Features
+## 🏗 Architecture & Pipeline
 
-### 🔧 Backend – FastAPI (Python)
+```mermaid
+flowchart LR
+    A[User / Frontend] -->|Uploads Image| B(FastAPI Backend)
+    B --> C{Parallel AI Processing}
+    C -->|Zero-Shot Context| D[CLIP Model]
+    C -->|Object Recognition| E[ViT Model]
+    D --> F[Tag Aggregation & Deduplication]
+    E --> F
+    F -->|Confidence Sorting| G[Top 5 Relevant Tags]
+    G --> A
+```
 
-Built with **FastAPI**, the backend enables high-performance, asynchronous image analysis via:
+## 💻 Tech Stack
 
-- **POST `/api/v1/analyze`**: Unified endpoint for single or multiple image uploads.
-- **Hybrid AI Architecture**:
-  - **ViT (Visual Transformer)**: General object classifier.
-  - **CLIP (Zero-Shot)**: Handles abstract or custom tags via prompt-based classification.
-- **Tag Aggregation Strategy**:
-  - Tags are combined, deduplicated, and sorted by confidence.
-  - The **Top 5** most relevant tags are returned.
-  - Each tag includes its **source model**.
-- **Performance Optimizations**:
-  - AI models are cached after first load.
-  - Fully asynchronous pipeline.
-- **Local-Ready Deployment**: Simple environment setup.
+- **Core AI & Models:** Hugging Face Transformers, PyTorch, OpenAI CLIP, Vision Transformer (ViT)
+- **Backend:** Python 3.10+, FastAPI, Uvicorn, Pydantic
+- **Frontend:** React 18, TypeScript, Tailwind CSS, Webpack
+- **Testing & Quality:** Pytest
 
----
+## ✨ Key Capabilities
 
-### 🎨 Frontend – React + TypeScript
+- **Hybrid AI Pipeline:** Runs ViT (for precise object detection) and CLIP (for zero-shot, contextual understanding) concurrently to maximize tagging accuracy.
+- **Smart Aggregation Logic:** Intelligently deduplicates, filters by confidence thresholds, and sorts the combined outputs to return only the Top 5 most relevant tags.
+- **Efficient Native Caching:** AI models are lazily loaded and cached in memory after the first initialization, drastically reducing latency for subsequent analysis requests.
+- **Asynchronous Processing:** Built on FastAPI to handle multi-image concurrent uploads without blocking the main event loop.
 
-Modern, responsive UI built with **React**, **TypeScript**, and **Tailwind CSS**:
+## 🛠 Quick Start
 
-- **Multi-Image Upload**: Drag & drop or file selection.
-- **Parallel Analysis**: Images processed concurrently.
-- **Results Visualization**:
-  - Thumbnails for uploaded images.
-  - Tags with confidence percentages.
-  - Color-coded feedback:
-    - 🟢 High confidence
-    - 🟡 Medium
-    - 🔴 Low
+To run this project locally, you'll need Python 3.10+ and Node.js installed.
 
----
+**1. Clone the repository**
+```bash
+git clone https://github.com/yourusername/visual_tagger.git
+cd visual_tagger
+```
 
-## 🧠 Tagging Logic & AI Strategy
+**2. Backend Setup**
+```bash
+cd backend/src
+python -m venv venv
+# Windows: venv\Scripts\activate | Mac/Linux: source venv/bin/activate
+pip install -r requirements.txt
+uvicorn main:app --reload
+```
+*(The API will be available at http://localhost:8000)*
 
-The system maximizes relevance and precision by running **ViT** and **CLIP** in parallel:
+**3. Frontend Setup**
+```bash
+cd ../../frontend
+npm install
+npm start
+```
+*(The UI will run on http://localhost:3000)*
 
-1. **Model Strengths**:
-   - `ViT`: Precise, fast object recognition.
-   - `CLIP`: Broad, contextual, zero-shot capabilities.
-2. **Parallel Execution**:
-   - Both models run simultaneously.
-3. **Smart Aggregation**:
-   - All tags above a global threshold are collected.
-   - Deduplicated with priority for higher confidence.
-   - Sorted and trimmed to Top 5 tags.
+## 🧠 AI Under the Hood
 
-This ensures **fast**, **flexible**, and **contextually rich** results.
+The architecture leverages two complimentary state-of-the-art models:
+- **Vision Transformer (ViT):** Chosen for its exceptional ability to classify standard, well-defined objects natively.
+- **OpenAI CLIP:** Utilized for its zero-shot capabilities. By providing contextual text prompts, CLIP can classify abstract concepts or highly specific edge-cases that a standard ImageNet-trained model might miss. 
 
----
+By combining these, Visual Tagger achieves a balance between raw accuracy (ViT) and semantic flexibility (CLIP).
 
-## 🛠 Tech Stack
+## 📂 Project Structure
 
-### Backend
-- Python 3.10+
-- FastAPI
-- Hugging Face Transformers (ViT & CLIP)
-- PyTorch
-- Pillow (PIL)
-- pydantic-settings
-- pytest
+```text
+├── backend/
+│   ├── src/
+│   │   ├── api/           # FastAPI routers and endpoints
+│   │   ├── core/          # Configuration and settings
+│   │   ├── models/        # AI model singletons and loaders (ViT, CLIP)
+│   │   ├── services/      # Business logic and tag aggregation
+│   │   ├── utils/         # Helper functions
+│   │   ├── main.py        # Application entry point
+│   │   └── requirements.txt
+│   └── tests/             # Pytest test suites
+├── frontend/
+│   ├── public/            # Static assets
+│   ├── src/               # React components, hooks, and API clients
+│   ├── package.json       # React dependencies
+│   └── tailwind.config.js # UI styling configuration
+└── README.md
+```
 
-### Frontend
-- React 18
-- TypeScript
-- Tailwind CSS
-- uuid
+## 🤝 Contributing & License
 
----
-
-## 📄 License
-
-Licensed under the [MIT License](LICENSE).
+Contributions, issues, and feature requests are welcome! Feel free to check the issues page.
+This project is licensed under the MIT License - see the `LICENSE` file for details.
